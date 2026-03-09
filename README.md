@@ -1,4 +1,5 @@
-# 32-bit RISC-V 5-Stage Pipelined Processor
+# AtlasRV32 — 32-bit RISC-V Pipelined Processor
+
 
 A synthesizable, 32-bit RISC-V processor implementing the RV32I base integer instruction set with a classic 5-stage pipeline, full hazard detection, and data forwarding. Synthesized and verified on FPGA.
 
