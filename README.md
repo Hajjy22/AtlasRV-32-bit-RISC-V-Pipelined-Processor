@@ -1,4 +1,5 @@
 # AtlasRV32 — 32-bit RISC-V Pipelined Processor
+
 ![ISA](https://img.shields.io/badge/ISA-RISC--V%20RV32I-red)
 ![RTL](https://img.shields.io/badge/RTL-SystemVerilog-orange)
 ![Pipeline](https://img.shields.io/badge/CPU-5--Stage%20Pipeline-green)
@@ -6,7 +7,7 @@
 ![Design](https://img.shields.io/badge/Focus-RTL%20Design-purple)
 
 <p align="center">
-  <img src="docs/atlasrv_logo.png">
+  <img src="docs/banner.png" alt="AtlasRV32 banner">
 </p>
 
 A synthesizable, 32-bit RISC-V processor implementing the RV32I base integer instruction set with a classic 5-stage pipeline, full hazard detection, and data forwarding. Synthesized and verified on FPGA.
