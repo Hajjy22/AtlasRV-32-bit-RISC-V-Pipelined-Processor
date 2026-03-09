@@ -48,10 +48,6 @@ module control_unit (
     localparam ALU_SLT  = 4'b1000;
     localparam ALU_SLTU = 4'b1001;
 
-    /* verilator lint_off UNUSEDSIGNAL */
-    logic unused_funct7 = |{funct7[6], funct7[4:0]};
-    /* verilator lint_on UNUSEDSIGNAL */
-
     // -------------------------------------------------------
     //  Main decode
     // -------------------------------------------------------

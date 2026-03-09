@@ -13,9 +13,6 @@ module if_stage #(
     output logic [31:0] instr_f         // fetched instruction
 );
 
-    // Address bits needed to index MEM_DEPTH entries
-    localparam MEM_ADDR_BITS = $clog2(MEM_DEPTH);
-
     logic [31:0] pc_next;
     logic [31:0] imem [0:MEM_DEPTH-1];
 
@@ -34,11 +31,7 @@ module if_stage #(
             pc_f <= pc_next;
     end
 
-    assign pc_next = pc_src ? pc_branch : pc_f + 4;
-
-    // Word-addressed: drop byte offset bits [1:0], keep MEM_ADDR_BITS
-    /* verilator lint_off WIDTHTRUNC */
-    assign instr_f = imem[pc_f[MEM_ADDR_BITS+1:2]];
-    /* verilator lint_on WIDTHTRUNC */
+    assign pc_next  = pc_src ? pc_branch : pc_f + 4;
+    assign instr_f  = imem[pc_f[31:2]];   // word-addressed
 
 endmodule
