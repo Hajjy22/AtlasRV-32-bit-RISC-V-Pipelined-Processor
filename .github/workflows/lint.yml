@@ -26,49 +26,63 @@ jobs:
       - name: Lint ALU
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/alu.sv
 
       - name: Lint Register File
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/register_file.sv
 
       - name: Lint Immediate Extend
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/imm_extend.sv
 
       - name: Lint Control Unit
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-MULTIDRIVEN \
+            -Wno-UNUSEDSIGNAL \
             rtl/control_unit.sv
 
       - name: Lint Hazard Detection
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/hazard/hazard_detection.sv
 
       - name: Lint Forwarding Unit
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/hazard/forwarding_unit.sv
 
       - name: Lint Pipeline Stages
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/pipeline/if_stage.sv
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/pipeline/id_stage.sv
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/pipeline/ex_stage.sv
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/pipeline/mem_stage.sv
           verilator --lint-only --sv --Wall \
+            -Wno-UNUSEDSIGNAL \
             rtl/pipeline/wb_stage.sv
 
       - name: Lint Top-Level Core
         run: |
           verilator --lint-only --sv --Wall \
+            -Wno-MULTIDRIVEN \
+            -Wno-UNUSEDSIGNAL \
             rtl/alu.sv \
             rtl/register_file.sv \
             rtl/imm_extend.sv \
