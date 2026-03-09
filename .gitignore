@@ -1,0 +1,30 @@
+# Simulation outputs
+sim/work/
+sim/dump.vcd
+sim/transcript
+sim/*.wlf
+*.vcd
+*.lxt
+
+# Vivado project files
+fpga/output/
+fpga/vivado_project/
+*.bit
+*.dcp
+*.log
+*.jou
+.Xil/
+
+# ModelSim
+work/
+transcript
+vsim.wlf
+
+# Compiled Python
+__pycache__/
+*.pyc
+
+# Editor
+.vscode/
+*.swp
+*~
