@@ -4,6 +4,7 @@
 // ============================================================
 module if_stage #(
     parameter MEM_DEPTH = 256          // number of 32-bit words
+    parameter MEM_ADDR_BITS = 8        // log2(MEM_DEPTH)
 )(
     input  logic        clk, rst,
     input  logic        stall,          // from hazard unit
@@ -32,6 +33,6 @@ module if_stage #(
     end
 
     assign pc_next  = pc_src ? pc_branch : pc_f + 4;
-    assign instr_f  = imem[pc_f[31:2]];   // word-addressed
+    assign instr_f  = imem[pc_f[MEM_ADDR_BITS+1:2]];   // word-addressed
 
 endmodule
