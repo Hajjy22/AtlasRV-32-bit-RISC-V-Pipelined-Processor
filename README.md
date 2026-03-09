@@ -187,4 +187,5 @@ The design targets > 50 MHz after place-and-route on Artix-7. Ideal CPI = 1.0; a
 
 ## Author
 
-**Ismail Hajjy** — Designed and implemented Jul. – Oct. 2024 as part of a computer architecture course project.
+**Ismail Hajjy**
+**ismailhajjy02@gmail.com**
