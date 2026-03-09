@@ -109,7 +109,7 @@ AtlasRV32/
 │       ├── hazard_detection.sv   # Load-use stall + branch flush
 │       └── forwarding_unit.sv    # EX/MEM and MEM/WB forwarding
 ├── docs/
-│   ├── atlasrv_logo.png
+│   ├── banner.png
 │   ├── Pipeline Architecture.png
 │   ├── Data Forwarding.png
 │   ├── Load-Use Stall.png
