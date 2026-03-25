@@ -1,0 +1,37 @@
+name: Verilator Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator
+
+      - name: Run Verilator lint
+        run: |
+          verilator --lint-only -sv \
+            rtl/alu.sv \
+            rtl/control_unit.sv \
+            rtl/register_file.sv \
+            rtl/imm_extend.sv \
+            rtl/pipeline/if_stage.sv \
+            rtl/pipeline/id_stage.sv \
+            rtl/pipeline/ex_stage.sv \
+            rtl/pipeline/mem_stage.sv \
+            rtl/pipeline/wb_stage.sv \
+            rtl/hazard/hazard_detection.sv \
+            rtl/hazard/forwarding_unit.sv \
+            rtl/riscv_core.sv \
+            --top-module riscv_core
