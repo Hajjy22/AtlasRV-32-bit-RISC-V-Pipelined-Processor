@@ -32,6 +32,6 @@ module if_stage #(
     end
 
     assign pc_next  = pc_src ? pc_branch : pc_f + 4;
-    assign instr_f  = imem[pc_f[31:2]];   // word-addressed
+    assign instr_f  = imem[pc_f[9:2]];   // word-addressed
 
 endmodule
