@@ -20,7 +20,7 @@ module if_stage #(
     initial begin
         for (int i = 0; i < MEM_DEPTH; i++)
             imem[i] = 32'h00000013; // NOP (ADDI x0, x0, 0)
-        $readmemh("../software/program.hex", imem);
+        $readmemh("software/program.hex", imem);
     end
 
     // PC register

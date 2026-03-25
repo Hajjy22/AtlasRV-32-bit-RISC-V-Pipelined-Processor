@@ -4,9 +4,9 @@
 // ============================================================
 module id_stage (
     input  logic        clk, rst,
+    input  logic [31:0] pc_d,
     // From IF/ID pipeline register
     input  logic [31:0] instr_d,
-    input  logic [31:0] pc_d,
     // Write-back port (from WB stage)
     input  logic        reg_write_w,
     input  logic [4:0]  rd_w,
@@ -32,7 +32,8 @@ module id_stage (
     assign rs2_d = instr_d[24:20];
     assign rd_d  = instr_d[11:7];
 
-    // Control unit
+    // Control unit (single instance - imm_sel now properly connected)
+    logic [2:0] imm_sel_d;
     control_unit ctrl (
         .opcode     (instr_d[6:0]),
         .funct3     (instr_d[14:12]),
@@ -46,20 +47,7 @@ module id_stage (
         .alu_src_a  (alu_src_a_d),
         .alu_src_b  (alu_src_b_d),
         .alu_ctrl   (alu_ctrl_d),
-        .imm_sel    (/* connected internally via imm_extend */)
-    );
-
-    // Immediate extend
-    logic [2:0] imm_sel_d;
-    control_unit ctrl_imm (  // second instance just for imm_sel (or merge)
-        .opcode     (instr_d[6:0]),
-        .funct3     (instr_d[14:12]),
-        .funct7     (instr_d[31:25]),
-        .imm_sel    (imm_sel_d),
-        // Tie off unused outputs
-        .reg_write  (),  .mem_read  (), .mem_write  (),
-        .mem_to_reg (), .branch    (), .jump        (),
-        .alu_src_a  (), .alu_src_b (), .alu_ctrl    ()
+        .imm_sel    (imm_sel_d)
     );
 
     imm_extend imm_ext_unit (

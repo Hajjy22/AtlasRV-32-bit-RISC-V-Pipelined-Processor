@@ -1,5 +1,5 @@
 // ============================================================
-//  top.sv  –  Top-level wrapper for FPGA synthesis
+//  top.sv  -  Top-level wrapper for FPGA synthesis
 //  Target: Xilinx Artix-7 (Basys3 / Nexys A7)
 // ============================================================
 module top (
@@ -8,14 +8,23 @@ module top (
     output logic [15:0] led     // status LEDs (optional debug)
 );
 
-    // Clock divider: 100 MHz → 25 MHz for processor
-    logic clk_cpu;
+    // Clock divider: 100 MHz -> 25 MHz for processor
     logic [1:0] clk_div;
+    logic clk_cpu_raw;
+    logic clk_cpu;
+    logic [31:0] pc_out;
 
-    always_ff @(posedge clk_100mhz)
+    always_ff @(posedge clk_100mhz) begin
         clk_div <= clk_div + 1;
+    end
+    
+    assign clk_cpu_raw = clk_div[1];
 
-    assign clk_cpu = clk_div[1];
+    // Force the generated clock onto the FPGA's dedicated low-skew clock tree
+    BUFG bufg_cpu_clk (
+        .I(clk_cpu_raw),
+        .O(clk_cpu)
+    );
 
     // Synchronous reset synchroniser
     logic rst_sync_1, rst_sync;
@@ -27,10 +36,11 @@ module top (
     // RISC-V core
     riscv_core u_core (
         .clk (clk_cpu),
-        .rst (rst_sync)
+        .rst (rst_sync),
+        .debug_pc (pc_out)
     );
 
-    // LED tie-off (expand for debug)
-    assign led = 16'hCAFE;
+    // Display bits [17:2] of the PC on the LEDs.
+    assign led = pc_out[17:2];
 
 endmodule

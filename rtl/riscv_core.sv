@@ -10,7 +10,8 @@
 // ============================================================
 module riscv_core (
     input  logic clk,
-    input  logic rst
+    input  logic rst,
+    output logic [31:0] debug_pc
 );
 
     // =========================================================
@@ -48,7 +49,7 @@ module riscv_core (
     // =========================================================
     logic        reg_write_e, mem_read_e, mem_write_e;
     logic [1:0]  mem_to_reg_e;
-    logic        branch_e, jump_e;
+    logic        branch_e, jump_e, jalr_e;
     logic [1:0]  alu_src_a_e;
     logic        alu_src_b_e;
     logic [3:0]  alu_ctrl_e;
@@ -88,8 +89,26 @@ module riscv_core (
     // =========================================================
     //  Branch/jump decision
     // =========================================================
-    // Resolved in EX stage
-    assign pc_src_e = (branch_e & zero_e) | jump_e;
+    // Resolved in EX stage using funct3 to distinguish all 6 types:
+    //   BEQ  funct3=000: take if ALU(SUB) == 0  -> zero_e
+    //   BNE  funct3=001: take if ALU(SUB) != 0  -> ~zero_e
+    //   BLT  funct3=100: take if ALU(SLT) == 1  -> alu_result_e_wire[0]
+    //   BGE  funct3=101: take if ALU(SLT) == 0  -> ~alu_result_e_wire[0]
+    //   BLTU funct3=110: take if ALU(SLTU)== 1  -> alu_result_e_wire[0]
+    //   BGEU funct3=111: take if ALU(SLTU)== 0  -> ~alu_result_e_wire[0]
+    logic branch_taken_e;
+    always_comb begin
+        case (funct3_e)
+            3'b000:  branch_taken_e = zero_e;
+            3'b001:  branch_taken_e = ~zero_e;
+            3'b100:  branch_taken_e = alu_result_e_wire[0];
+            3'b101:  branch_taken_e = ~alu_result_e_wire[0];
+            3'b110:  branch_taken_e = alu_result_e_wire[0];
+            3'b111:  branch_taken_e = ~alu_result_e_wire[0];
+            default: branch_taken_e = 1'b0;
+        endcase
+    end
+    assign pc_src_e = (branch_e & branch_taken_e) | jump_e;
 
     // =========================================================
     //  Stage instantiations
@@ -138,6 +157,7 @@ module riscv_core (
         .alu_ctrl_e   (alu_ctrl_e),
         .alu_src_a_e  (alu_src_a_e),
         .alu_src_b_e  (alu_src_b_e),
+        .jalr_e       (jalr_e),
         .forward_a_e  (forward_a_e),
         .forward_b_e  (forward_b_e),
         .alu_result_m (alu_result_m),
@@ -220,7 +240,7 @@ module riscv_core (
         if (rst || flush_e) begin
             reg_write_e  <= 1'b0; mem_read_e   <= 1'b0;
             mem_write_e  <= 1'b0; mem_to_reg_e <= 2'b0;
-            branch_e     <= 1'b0; jump_e        <= 1'b0;
+            branch_e     <= 1'b0; jump_e        <= 1'b0; jalr_e <= 1'b0;
             alu_src_a_e  <= 2'b0; alu_src_b_e  <= 1'b0;
             alu_ctrl_e   <= 4'b0;
             rd1_e        <= 32'b0; rd2_e        <= 32'b0;
@@ -232,6 +252,7 @@ module riscv_core (
             reg_write_e  <= reg_write_d; mem_read_e   <= mem_read_d;
             mem_write_e  <= mem_write_d; mem_to_reg_e <= mem_to_reg_d;
             branch_e     <= branch_d;    jump_e        <= jump_d;
+            jalr_e       <= (instr_d[6:0] == 7'b1100111); // OP_JALR
             alu_src_a_e  <= alu_src_a_d; alu_src_b_e  <= alu_src_b_d;
             alu_ctrl_e   <= alu_ctrl_d;
             rd1_e        <= rd1_d;       rd2_e         <= rd2_d;
@@ -278,5 +299,7 @@ module riscv_core (
             rd_w           <= rd_m;
         end
     end
+
+assign debug_pc = pc_f;
 
 endmodule

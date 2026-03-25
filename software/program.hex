@@ -1,32 +1,28 @@
-// program.hex – hand-assembled test_program.S
-// Format: 32-bit words, little-endian hex (readmemh compatible)
-// Each line is one instruction word at word-address N
-
 00A00093  // 0x00: addi  x1,  x0, 10
 00600113  // 0x04: addi  x2,  x0, 6
 002081B3  // 0x08: add   x3,  x1, x2
 40208233  // 0x0C: sub   x4,  x1, x2
-002072B3  // 0x10: and   x5,  x1, x2
-002061B3  // 0x14: or    x6,  x1, x2 -- note: corrected encoding
-002041B3  // 0x18: xor   x7,  x1, x2 -- note: corrected encoding
+0020F2B3  // 0x10: and   x5,  x1, x2  (fixed: rs1=x1)
+0020E333  // 0x14: or    x6,  x1, x2  (fixed: rs1=x1)
+0020C3B3  // 0x18: xor   x7,  x1, x2  (fixed: rs1=x1)
 00209413  // 0x1C: slli  x8,  x1, 2
 00145493  // 0x20: srli  x9,  x8, 1
 40145513  // 0x24: srai  x10, x8, 1
 00500593  // 0x28: addi  x11, x0, 5
 00B58633  // 0x2C: add   x12, x11, x11
 00B606B3  // 0x30: add   x13, x12, x11
-ABC00713  // 0x34: addi  x14, x0, 0xABC -- sign-ext
+ABC00713  // 0x34: addi  x14, x0, 0xABC
 00E02023  // 0x38: sw    x14, 0(x0)
 00002783  // 0x3C: lw    x15, 0(x0)
 00178813  // 0x40: addi  x16, x15, 1
 00000893  // 0x44: addi  x17, x0, 0
 00500913  // 0x48: addi  x18, x0, 5
-00188893  // 0x4C: addi  x17, x17, 1
-FF28C4E3  // 0x50: blt   x17, x18, -8 (loop back)
-0280006F  // 0x54: jal   x19, +40
-0FF00A13  // 0x58: addi  x20, x0, 0xFF  (skipped)
-02A00A13  // 0x5C: addi  x20, x0, 42
-0000006F  // 0x60: jal   x0, 0  (spin)
+00188893  // 0x4C: addi  x17, x17, 1   <- loop label
+FF28CEE3  // 0x50: blt   x17, x18, -4  (fixed: offset=-4, funct3=100)
+008009EF  // 0x54: jal   x19, +8       (fixed: offset=+8 to func_add at 0x5C)
+0FF00A13  // 0x58: addi  x20, x0, 0xFF (skipped by jal)
+02A00A13  // 0x5C: addi  x20, x0, 42   <- func_add label
+0000006F  // 0x60: jal   x0, 0         (spin)
 00000013  // 0x64: nop
 00000013  // 0x68: nop
 00000013  // 0x6C: nop

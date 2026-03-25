@@ -14,14 +14,23 @@ module register_file (
     logic [31:0] regs [31:0];
 
     // Synchronous write, x0 always stays 0
-    always_ff @(posedge clk) begin
+    // (always instead of always_ff to allow the initial block below
+    //  to co-drive 'regs' for simulation initialisation)
+    always @(posedge clk) begin
         if (we3 && wa3 != 5'b0)
             regs[wa3] <= wd3;
     end
 
-    // Asynchronous read; x0 hardwired to 0
-    assign rd1 = (ra1 == 5'b0) ? 32'b0 : regs[ra1];
-    assign rd2 = (ra2 == 5'b0) ? 32'b0 : regs[ra2];
+    // Asynchronous read with write-through bypass:
+    // If WB is writing the same register we're reading this cycle,
+    // return the write data directly (avoids read-before-write hazard
+    // when a 3-instruction gap leaves no forwarding path in EX).
+    assign rd1 = (ra1 == 5'b0)              ? 32'b0  :
+                 (we3 && wa3 == ra1)        ? wd3    :
+                                              regs[ra1];
+    assign rd2 = (ra2 == 5'b0)              ? 32'b0  :
+                 (we3 && wa3 == ra2)        ? wd3    :
+                                              regs[ra2];
 
     // Initialise all registers to 0 for simulation
     initial begin

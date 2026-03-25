@@ -8,22 +8,22 @@ vlib work
 vmap work work
 
 # Compile RTL sources
-vlog -sv ../rtl/alu.sv
-vlog -sv ../rtl/register_file.sv
-vlog -sv ../rtl/control_unit.sv
-vlog -sv ../rtl/imm_extend.sv
-vlog -sv ../rtl/pipeline/if_stage.sv
-vlog -sv ../rtl/pipeline/id_stage.sv
-vlog -sv ../rtl/pipeline/ex_stage.sv
-vlog -sv ../rtl/pipeline/mem_stage.sv
-vlog -sv ../rtl/pipeline/wb_stage.sv
-vlog -sv ../rtl/hazard/hazard_detection.sv
-vlog -sv ../rtl/hazard/forwarding_unit.sv
-vlog -sv ../rtl/riscv_core.sv
-vlog -sv ../rtl/top.sv
+vlog -sv rtl/alu.sv
+vlog -sv rtl/register_file.sv
+vlog -sv rtl/control_unit.sv
+vlog -sv rtl/imm_extend.sv
+vlog -sv rtl/pipeline/if_stage.sv
+vlog -sv rtl/pipeline/id_stage.sv
+vlog -sv rtl/pipeline/ex_stage.sv
+vlog -sv rtl/pipeline/mem_stage.sv
+vlog -sv rtl/pipeline/wb_stage.sv
+vlog -sv rtl/hazard/hazard_detection.sv
+vlog -sv rtl/hazard/forwarding_unit.sv
+vlog -sv rtl/riscv_core.sv
+vlog -sv rtl/top.sv
 
 # Compile testbench
-vlog -sv tb_top.sv
+vlog -sv sim/tb_top.sv
 
 # Simulate
 vsim -t 1ps work.tb_top

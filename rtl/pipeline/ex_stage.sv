@@ -9,6 +9,7 @@ module ex_stage (
     input  logic [3:0]  alu_ctrl_e,
     input  logic [1:0]  alu_src_a_e,
     input  logic        alu_src_b_e,
+    input  logic        jalr_e,             // 1 = JALR (target = rs1+imm)
     // Forwarding
     input  logic [1:0]  forward_a_e,
     input  logic [1:0]  forward_b_e,
@@ -68,7 +69,10 @@ module ex_stage (
         .zero     (zero_e)
     );
 
-    // Branch / jump target: PC + imm
-    assign pc_target_e = pc_e + imm_ext_e;
+    // Branch/JAL target: PC + imm
+    // JALR target:       rs1 + imm, LSB forced to 0 (RV32I spec)
+    logic [31:0] jalr_raw;
+    assign jalr_raw    = src_a_raw + imm_ext_e;
+    assign pc_target_e = jalr_e ? {jalr_raw[31:1], 1'b0} : pc_e + imm_ext_e;
 
 endmodule
