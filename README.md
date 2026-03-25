@@ -1,5 +1,6 @@
 # AtlasRV32 — 32-bit RISC-V Pipelined Processor
 
+![Verilator Lint](https://github.com/Hajjy22/AtlasRV-32-bit-RISC-V-Pipelined-Processor/actions/workflows/lint.yml/badge.svg)
 ![ISA](https://img.shields.io/badge/ISA-RISC--V%20RV32I-red)
 ![RTL](https://img.shields.io/badge/RTL-SystemVerilog-orange)
 ![Pipeline](https://img.shields.io/badge/CPU-5--Stage%20Pipeline-green)
